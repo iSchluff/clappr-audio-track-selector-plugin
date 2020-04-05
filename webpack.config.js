@@ -21,21 +21,11 @@ module.exports = {
     }, {
       test: /\.s[ac]ss$/i,
       use: [
-        // Creates `style` nodes from JS strings
-        // 'style-loader',
         // Translates CSS into CommonJS
         'css-loader',
         // Compiles Sass to CSS
         'sass-loader',
       ],
-      // test: /\.scss$/,
-      // loaders: ['css-loader', 'sass-loader?includePaths[]='
-      //   + path.resolve(__dirname, './node_modules/compass-mixins/lib')
-      //   + '&includePaths[]='
-      //   + path.resolve(__dirname, './node_modules/clappr/src/base/scss')
-      //   + '&includePaths[]='
-      //   + path.resolve(__dirname, './src/base/scss')
-      // ],
       include: path.resolve(__dirname, 'src'),
     }, {
       test: /\.html$/,
@@ -50,7 +40,6 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist'),
-    // publicPath: '<%=baseUrl%>/',
     filename: filename,
     library: 'AudioTrackSelector',
     libraryExport: 'default',
