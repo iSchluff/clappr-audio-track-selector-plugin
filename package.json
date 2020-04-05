@@ -3,7 +3,7 @@
   "description": "A plugin for Clappr that adds support to manually select audio languages on multi-audio streams.",
   "version": "0.2.0",
   "license": "MIT",
-  "main": "index.js",
+  "main": "dist/audio-track-selector.js",
   "scripts": {
     "release": "webpack --mode production --progress -d --optimize-minimize --optimize-dedupe --output-filename audio-track-selector.min.js",
     "build": "webpack --mode development --progress",
