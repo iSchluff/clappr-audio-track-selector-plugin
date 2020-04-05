@@ -1,5 +1,9 @@
 # Clappr Audio Track Selector Plugin
-Designed to work with HLS video streams.
+
+Allows you to select the audio language in a multi-language stream.
+Designed to work with both HLS and MPEG-DASH video streams.
+
+MPEG-Dash language selection requires the specially patched *@c3voc/dash-shaka-playback*.
 
 <img src="https://raw.githubusercontent.com/PreDeToR/clappr-audio-track-selector-plugin/master/screenshot.png"/>
 
@@ -29,7 +33,7 @@ var player = new Clappr.Player({
 ## Compatibility
 Only been tested on :<br/>
 PC:<br/>
-  FireFox v52.0<br/>
+  Firefox v52.0<br/>
   Opera v30.0<br/>
   Chrome/Chromium v56.0.2924<br/>
 Mobile:<br/>
