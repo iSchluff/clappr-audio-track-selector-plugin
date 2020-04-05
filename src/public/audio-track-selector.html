@@ -1,11 +1,11 @@
 <button data-audio-track-selector-button>
-  Auto
+  Language
 </button>
 <ul>
   <% if (title) { %>
   <li data-title><%= title %></li>
   <% }; %>
-  <% for (var i = 0; i < levels.length; i++) { %>
-    <li><a href="#" data-audio-track-selector-select="audio_<%= i %>" data-level-group-selector-select="<%= levels[i].groupId %>"><%= levels[i].name %></a></li>
-  <% }; %>
+  <% languages.forEach((language) => { %>
+    <li><a href="#" data-audio-track-selector-lang="<%= language %>"><%= language %></a></li>
+  <% }); %>
 </ul>
