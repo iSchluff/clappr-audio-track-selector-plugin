@@ -173,9 +173,9 @@ export default class AudioTrackSelector extends UICorePlugin {
 
   _getLanguageElement(language = null) {
     if (language)
-      return this.$('.audio_track_selector a[data-audio-track-selector-lang="' + language + '"]')
+      return this.$('.audio_track_selector a[data-audio-track-selector-lang="' + language + '"]').parent();
     else
-      return this.$('.audio_track_selector a');
+      return this.$('.audio_track_selector a').parent();
   }
 
   _getButtonElement() {
