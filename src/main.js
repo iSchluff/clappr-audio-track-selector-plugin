@@ -182,7 +182,7 @@ export default class AudioTrackSelector extends UICorePlugin {
     return this.$('.audio_track_selector button')
   }
 
-  _getTitle() { return (this.core.options.levelSelectorConfig || {}).title }
+  _getTitle() { return (this.core.options.audioTrackSelectorConfig || {}).title }
   _startTrackSwitch() { this._getButtonElement().addClass('changing') }
   _stopTrackSwitch() { this._getButtonElement().removeClass('changing') }
 
