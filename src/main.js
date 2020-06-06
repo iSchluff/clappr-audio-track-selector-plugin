@@ -1,4 +1,4 @@
-import {Events, Styler, UICorePlugin, template} from 'clappr'
+import {Events, Styler, UICorePlugin, HTML5Video, template} from 'clappr'
 import pluginHtml from './public/audio-track-selector.html'
 import pluginStyle from './public/style.scss'
 
@@ -62,7 +62,7 @@ export default class AudioTrackSelector extends UICorePlugin {
     if (!this.container) return false;
     if (!this.playback) return false;
 
-    // Only care if we have at least 2 languages to choose from
+    // Only display if we have at least 2 languages to choose from
     var hasChoice = !!(this.languages && this.languages.size > 1);
 
     return hasChoice
@@ -89,18 +89,27 @@ export default class AudioTrackSelector extends UICorePlugin {
     // custom voc dash-shaka-playback
     if (this.playback.selectAudioLanguage) {
       this.nextLanguage = language;
-      this._startTrackSwitch();
       this.playback.selectAudioLanguage(language);
 
     // hlsjs playback
-    } else if(this.playback._hls) {
-
+    } else if (this.playback._hls) {
       // hlsjs may have multiple audiotracks with the same language
       // this will just switch to the first one
-      const track = this.playback._hls.audioTracks.find((track) => track.lang == language)
+      const track = this.playback._hls.audioTracks.find((track) => track.lang == language || track.name === language)
       if (!track) return;
 
       this.playback._hls.audioTrack = track.id;
+      this.activeLanguage = language;
+      this._highlightCurrentElement();
+
+    // html5 track change
+    } else if (this.playback.el.audioTracks) {
+      // also just selects the first track matching the label
+      const audioTracks = [...this.playback.el.audioTracks];
+      const track = audioTracks.find((track) => track.language == language || track.label === language)
+      if (!track) return;
+
+      track.enabled = true;
       this.activeLanguage = language;
       this._highlightCurrentElement();
     }
@@ -114,12 +123,22 @@ export default class AudioTrackSelector extends UICorePlugin {
     // hlsjs playback
     } else if (this.playback._hls) {
       const audioTracks = this.playback._hls.audioTracks;
-      const trackId = this.playback._hls.audioTrack;
-      const current = audioTracks.find((track) => track.id == trackId);
+      const currentId = this.playback._hls.audioTrack;
+      const current = audioTracks.find((track) => track.id == currentId);
 
-      this.languages = new Set(audioTracks.map((track) => track.lang));
+      this.languages = new Set(audioTracks.map((track) => track.lang || track.name));
       if (current) {
-        this.activeLanguage = current.lang;
+        this.activeLanguage = current.lang || current.name;
+      }
+
+    // native playback
+    } else if (this.playback.el.audioTracks) {
+      const audioTracks = [...this.playback.el.audioTracks];
+      const current = audioTracks.find((track) => track.enabled);
+
+      this.languages = new Set(audioTracks.map((track) => track.language || track.label));
+      if (current) {
+        this.activeLanguage = current.language || current.label;
       }
     }
 
@@ -138,14 +157,11 @@ export default class AudioTrackSelector extends UICorePlugin {
     return false;
   }
 
-  // Handles adaptation event, currently only from shaka-playback
+  // Handles adaptation event from shaka-playback
   _handleAdaptation(variant) {
     if (variant.language) {
       this.activeLanguage = variant.language;
       this._highlightCurrentElement();
-      if (variant.language == this.nextLanguage) {
-        this._stopTrackSwitch();
-      }
     }
   }
 
@@ -154,9 +170,9 @@ export default class AudioTrackSelector extends UICorePlugin {
     this._fillLanguages();
   }
 
-  // hlsjs-playback only knows languages on play
+  // hlsjs-playback and html5video-playback only know languages on play
   _handlePlay() {
-    if (this.playback._hls) {
+    if (this.playback._hls || this.playback instanceof HTML5Video) {
       this._fillLanguages();
     }
   }
@@ -183,8 +199,6 @@ export default class AudioTrackSelector extends UICorePlugin {
   }
 
   _getTitle() { return (this.core.options.audioTrackSelectorConfig || {}).title }
-  _startTrackSwitch() { this._getButtonElement().addClass('changing') }
-  _stopTrackSwitch() { this._getButtonElement().removeClass('changing') }
 
   _highlightCurrentElement() {
     if (!this.activeLanguage)
