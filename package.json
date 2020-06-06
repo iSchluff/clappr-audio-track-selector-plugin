@@ -1,7 +1,7 @@
 {
   "name": "@c3voc/clappr-audio-track-selector",
   "description": "A plugin for Clappr that adds support to manually select audio languages on multi-audio streams.",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "license": "MIT",
   "main": "dist/audio-track-selector.js",
   "scripts": {
